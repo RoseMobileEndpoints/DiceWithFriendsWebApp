@@ -25,7 +25,7 @@ from handlers import main_handlers
 jinja_env = jinja2.Environment(loader=jinja2.FileSystemLoader(os.path.dirname(__file__)), autoescape=True)
 
 app = webapp2.WSGIApplication([
-    ('/', main_handlers.MainHandler),
+    ('/', main_handlers.HomeHandler),
     ('/set_display_name', main_handlers.SetDisplayNameHandler),
     ('/play', game_handlers.PlayHandler),
     ('/games', game_handlers.GamesHandler)

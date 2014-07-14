@@ -11,8 +11,8 @@ class BaseHandler(webapp2.RequestHandler):
   def get(self):
     user = users.get_current_user()
     if not user:
-      template = main.jinja_env.get_template("templates/not_logged_in.html")
-      self.response.out.write(template.render({'login_url': users.create_login_url("/")}))
+      template = main.jinja_env.get_template("templates/home.html")
+      self.response.out.write(template.render({'login_url': users.create_login_url(self.request.referer)}))
     else:
       player = models.Player.get_player_from_email(user.email())
       if not player.display_name or not len(player.display_name) > 0:
@@ -27,9 +27,9 @@ class BaseHandler(webapp2.RequestHandler):
     return
 
 
-class MainHandler(BaseHandler):
+class HomeHandler(BaseHandler):
   def get_template(self):
-    return "templates/main.html"
+    return "templates/home.html"
 
   def update_values(self, player, base_values):
     return
@@ -39,7 +39,7 @@ class SetDisplayNameHandler(webapp2.RequestHandler):
     def get(self):
         user = users.get_current_user()
         if not user:
-            template = main.jinja_env.get_template("templates/not_logged_in.html")
+            template = main.jinja_env.get_template("templates/home.html")
             self.response.out.write(template.render({'login_url': users.create_login_url("/")}))
         else:
             player = models.Player.get_player_from_email(user.email())

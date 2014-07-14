@@ -1,13 +1,17 @@
 {% include "templates/header.html" %}
 
 <link rel="stylesheet" type="text/css" href="/static/stylesheets/set_display_name.css">
-
+<link rel="stylesheet" type="text/css" href="/static/stylesheets/home.css">
 <div class="container">
-  <form class="form" role="form" action="" method="POST">
-    <h2 class="form-heading">Display name</h2>
-    <input type="text" name="display_name" class="form-control" placeholder="Usually just your first name" value="{% if player.display_name %}{{ player.display_name }}{% endif %}"required="">
-    <button class="btn btn-lg btn-primary btn-block" type="submit">Set Display Name</button>
-  </form>
-</div>
+  <div class="jumbotron">
+    <h1>Set display name</h1>
+    <img width="256px" height="256px" src="/static/images/dwf_logo.png" alt="logo" />
 
+<p class="lead">This will be the name displayed in the app and on game pages (instead of your full email address).</p>
+    <form class="form" role="form" action="" method="POST">
+      <input type="text" name="display_name" class="form-control" placeholder="Usually just your first name" value="{% if player.display_name %}{{ player.display_name }}{% endif %}"required="">
+      <button class="btn btn-lg btn-primary btn-block" type="submit">Set</button>
+    </form>
+  </div>
+</div>
 {% include "templates/footer.html" %}

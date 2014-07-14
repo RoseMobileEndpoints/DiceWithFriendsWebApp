@@ -21,7 +21,7 @@ class BaseHandler(webapp2.RequestHandler):
         values = {'player': player, 'logout_url': users.create_logout_url("/")}
         self.update_values(player, values)
         template = main.jinja_env.get_template(self.get_template())
-        self.response.out.write(template.render({'player': player, 'logout_url': users.create_logout_url("/")}))
+        self.response.out.write(template.render(values))
 
   def update_values(self, player, base_values):
     return

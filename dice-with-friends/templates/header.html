@@ -26,7 +26,9 @@
           <li><a href="/games">Look for games</a></li>
         </ul>
         <ul class="nav navbar-nav navbar-right">
-          <li><a href="{{ logout_url }}">Logout{% if player %} {{ player.get_display_name() }}{% endif %}</a></li>
+          <li>
+            {% if player %}<a style="display: inline-block;" href="/set_display_name">{{ player.get_display_name() }}</a>{% endif %}
+            {% if logout_url %} | <a style="display: inline-block;" href="{{ logout_url }}">Sign out</a>{% endif %}</li>
         </ul>
       </nav>
     </div>

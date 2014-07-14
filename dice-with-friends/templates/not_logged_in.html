@@ -7,13 +7,21 @@ body {
   background-color: #eee;
   text-align: center;
 }
+
 .sign-in-block {
   width: 400px;
+  text-align: center;
 }
+
+#sign-in-btn {
+  margin: 20px 0;
+  padding: 10px;
+}
+
 </style>
 <div class="sign-in-block jumbotron container">
   <h2>Please sign in to play</h2>
-  <a href="{{ login_url }}" class="btn btn-lg btn-primary btn-block" type="submit">Sign in</a>
+  <a id="sign-in-btn" href="{{ login_url }}" class="btn btn-lg btn-primary btn-block">Sign in</a>
 </div>
 
 {% include "templates/footer.html" %}

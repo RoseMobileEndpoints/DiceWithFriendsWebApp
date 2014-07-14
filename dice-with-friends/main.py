@@ -18,15 +18,15 @@ import os
 import jinja2
 import webapp2
 
-from handlers.GamesHandler import GamesHandler
-from handlers.MainHandler import MainHandler
-from handlers.PlayHandler import PlayHandler
+from handlers import game_handlers
+from handlers import main_handlers
 
 # Jinja environment instance necessary to use Jinja templates.
 jinja_env = jinja2.Environment(loader=jinja2.FileSystemLoader(os.path.dirname(__file__)), autoescape=True)
 
 app = webapp2.WSGIApplication([
-    ('/', MainHandler),
-    ('/play', PlayHandler),
-    ('/games', GamesHandler)
+    ('/', main_handlers.MainHandler),
+    ('/set_display_name', main_handlers.SetDisplayNameHandler),
+    ('/play', game_handlers.PlayHandler),
+    ('/games', game_handlers.GamesHandler)
 ], debug=True)

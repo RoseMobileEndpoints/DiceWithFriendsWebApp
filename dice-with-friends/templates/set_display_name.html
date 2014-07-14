@@ -1,0 +1,13 @@
+{% include "templates/header.html" %}
+
+<link rel="stylesheet" type="text/css" href="/static/stylesheets/set_display_name.css">
+
+<div class="container">
+  <form class="form" role="form" action="" method="POST">
+    <h2 class="form-heading">Create a display name</h2>
+    <input type="text" name="display_name" class="form-control" placeholder="Usually just your first name" required="">
+    <button class="btn btn-lg btn-primary btn-block" type="submit">Set Display Name</button>
+  </form>
+</div>
+
+{% include "templates/footer.html" %}

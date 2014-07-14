@@ -1,38 +1,10 @@
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-<title>Dice with Friends</title>
-<link rel="stylesheet" type="text/css" href="/static/stylesheets/bootstrap.min.css">
-<link rel="stylesheet" type="text/css" href="/static/stylesheets/bootstrap-theme.min.css">
-<link rel="stylesheet" type="text/css" href="/static/stylesheets/play.css">
-<script src="/static/js/jquery.min.js"></script>
-<script src="/static/js/bootstrap.min.js"></script>
+{% include "templates/header.html" %}
+
 <script src="/static/js/dwf_play_main.js"></script>
 <script src="/static/js/Die.js"></script>
 <script src="/static/js/DiceRound.js"></script>
 <script src="/static/js/DiceRoundController.js"></script>
-</head>
-<body>
-  <header class="navbar navbar-inverse navbar-fixed-top bs-docs-nav" role="banner">
-    <div class="container">
-      <div class="navbar-header">
-        <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".bs-navbar-collapse">
-          <span class="sr-only">Toggle navigation</span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-        </button>
-        <a href="/" class="navbar-brand">Dice with Friends</a>
-      </div>
-      <nav class="collapse navbar-collapse bs-navbar-collapse" role="navigation">
-        <ul class="nav navbar-nav navbar-left">
-          <li><a href="/games">Look for games</a></li>
-        </ul>
-      </nav>
-    </div>
-  </header>
+<link rel="stylesheet" type="text/css" href="/static/stylesheets/play.css">
 
 	<div class="container">
 		<div class="jumbotron row main">
@@ -59,5 +31,5 @@
 			</div>
 		</div>
 	</div>
-  </body>
-</html>
+
+{% include "templates/footer.html" %}

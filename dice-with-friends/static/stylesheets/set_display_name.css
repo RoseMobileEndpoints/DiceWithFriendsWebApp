@@ -1,0 +1,28 @@
+body {
+  padding-top: 40px;
+  padding-bottom: 40px;
+  background-color: #eee;
+}
+
+.form {
+  max-width: 400px;
+  padding: 15px;
+  margin: 0 auto;
+}
+
+.form .form-heading {
+  margin-bottom: 10px;
+}
+
+.form input[name="display_name"] {
+  margin-bottom: 10px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+  width: 300px;
+  margin-left: 20px;
+}
+
+button[type="submit"] {
+  width: 300px;
+  margin-left: 20px;
+}

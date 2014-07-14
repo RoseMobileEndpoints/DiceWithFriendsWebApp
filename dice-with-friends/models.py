@@ -13,7 +13,7 @@ class Player(ndb.Model):
     if self.display_name:
       return self.display_name
     elif self.lowercase_email:
-      return self.lowercase_emailx
+      return self.lowercase_email
     else:
       return ''
 
@@ -25,7 +25,7 @@ class Player(ndb.Model):
     player = Player.query(Player.lowercase_email==email.lower()).get()
     if not player:
       logging.info("Failed to find player by userid, creating new user")
-      player = Player(lowercase_email=email.lower())
+      player = Player(id=email.lower(), lowercase_email=email.lower())
       player.put()
     logging.info("Player: " + player.key.urlsafe())
     return player

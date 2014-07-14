@@ -4,8 +4,8 @@
 
 <div class="container">
   <form class="form" role="form" action="" method="POST">
-    <h2 class="form-heading">Create a display name</h2>
-    <input type="text" name="display_name" class="form-control" placeholder="Usually just your first name" required="">
+    <h2 class="form-heading">Display name</h2>
+    <input type="text" name="display_name" class="form-control" placeholder="Usually just your first name" value="{% if player.display_name %}{{ player.display_name }}{% endif %}"required="">
     <button class="btn btn-lg btn-primary btn-block" type="submit">Set Display Name</button>
   </form>
 </div>

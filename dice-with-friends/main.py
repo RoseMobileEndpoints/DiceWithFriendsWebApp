@@ -14,12 +14,19 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+import os
+import jinja2
 import webapp2
 
-class MainHandler(webapp2.RequestHandler):
-    def get(self):
-        self.response.write('Hello world!')
+from handlers.GamesHandler import GamesHandler
+from handlers.MainHandler import MainHandler
+from handlers.PlayHandler import PlayHandler
+
+# Jinja environment instance necessary to use Jinja templates.
+jinja_env = jinja2.Environment(loader=jinja2.FileSystemLoader(os.path.dirname(__file__)), autoescape=True)
 
 app = webapp2.WSGIApplication([
-    ('/', MainHandler)
+    ('/', MainHandler),
+    ('/play', PlayHandler),
+    ('/games', GamesHandler)
 ], debug=True)

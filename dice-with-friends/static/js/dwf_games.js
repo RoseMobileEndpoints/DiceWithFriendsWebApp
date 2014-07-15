@@ -1,9 +1,9 @@
 /* Namespace */
 var rh = rh || {};
 rh.dwf = rh.dwf || {};
-rh.dwf.home = rh.dwf.home || {};
+rh.dwf.games = rh.dwf.games || {};
 
-rh.dwf.home.enableButtons = function() {
+rh.dwf.games.enableButtons = function() {
 	$("#new-game-btn").click(function() {
 		$('input[name=invited_player_email]').val("");
 	    $('#new-game-modal').modal('show');
@@ -12,5 +12,5 @@ rh.dwf.home.enableButtons = function() {
 
 /* main */
 $(document).ready( function() {
-	rh.dwf.home.enableButtons();
+	rh.dwf.games.enableButtons();
 });

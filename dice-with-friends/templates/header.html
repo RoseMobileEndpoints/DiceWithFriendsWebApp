@@ -30,7 +30,7 @@
         {% endif %}
         <ul class="nav navbar-nav navbar-right">
           <li>
-            {% if player %}<a style="display: inline-block;" href="/set_display_name">{{ player.get_display_name() }}</a>{% endif %}
+            {% if player %}<a style="display: inline-block;" href="/set_display_name">{{ player.get_name() }}</a>{% endif %}
             {% if logout_url %} | <a style="display: inline-block;" href="{{ logout_url }}">Sign out</a>{% endif %}</li>
         </ul>
       </nav>

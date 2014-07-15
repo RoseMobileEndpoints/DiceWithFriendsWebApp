@@ -20,9 +20,12 @@ import webapp2
 
 from handlers import game_handlers
 from handlers import main_handlers
+from utils import date_utils
+
 
 # Jinja environment instance necessary to use Jinja templates.
 jinja_env = jinja2.Environment(loader=jinja2.FileSystemLoader(os.path.dirname(__file__)), autoescape=True)
+jinja_env.filters["date_format"] = date_utils.date_format
 
 app = webapp2.WSGIApplication([
     ('/', main_handlers.HomeHandler),

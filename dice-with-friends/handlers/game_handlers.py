@@ -1,4 +1,5 @@
 from google.appengine.ext import ndb
+from datetime import datetime
 
 from utils import game_utils, player_utils
 import base_handlers
@@ -40,10 +41,12 @@ class ScoresUpdateAction(base_handlers.BaseAction):
     """ Receives the updated round scores from a player after they complete a round. """
     game = ndb.Key(urlsafe=self.request.get('game_key')).get()
     new_score = int(self.request.get("new_score"))
-    if player.key == game.creator_player_key:
+    if player.key == game.creator_key:
       game.creator_scores.append(new_score)
+      game.last_update_by_creator = datetime.now()
     else:
-      game.invited_player_scores.append(new_score)
+      game.invitee_scores.append(new_score)
+      game.last_update_by_invitee = datetime.now()
     game.put()
     self.redirect(self.request.referer)
 
@@ -52,7 +55,7 @@ class NewGameAction(base_handlers.BaseAction):
   def handle_post(self, player):
     invited_player = player_utils.get_player_from_email(self.request.get('invited_player_email').lower())
     new_game = models.Game(parent=player.key,
-                           creator_player_key=player.key,
-                           invited_player_key=invited_player.key)
+                           creator_key=player.key,
+                           invitee_key=invited_player.key)
     new_game.put();
     self.redirect("/play?game_key=" + new_game.key.urlsafe())

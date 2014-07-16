@@ -10,10 +10,10 @@
 	<div class="row game-stats">
 		<h1>Official Game Round <span id="official-round-in-progress"></span></h1>
 		<div class="col-xs-6">
-			<h2>{{ game.creator_player_key.get().get_name() }}<br><span id="official-creator-score"></span></h2>
+			<h2>{{ game.creator_key.get().get_name() }}<br><span id="official-creator-score"></span></h2>
 		</div>
 		<div class="col-xs-6">
-			<h2>{{ game.invited_player_key.get().get_name() }}<br><span id="official-invited-player-score"></span></h2>
+			<h2>{{ game.invitee_key.get().get_name() }}<br><span id="official-invited-player-score"></span></h2>
 		</div>
 	</div>
 	<h2 style="text-align: center">After <span id="player-actual-round"></span> rounds, my score = <span id="player-score"></span></h2>
@@ -55,7 +55,7 @@
 <h1>This page is FAR from finished. :)</h1>
 <script>
 var creatorScores = {{ game.creator_scores }};
-var invitedPlayerScores = {{ game.invited_player_scores }};
+var invitedPlayerScores = {{ game.invitee_scores }};
 var officialRound = Math.min(creatorScores.length, invitedPlayerScores.length);
 $("#official-round-in-progress").html(officialRound);
 
@@ -68,7 +68,7 @@ for (var i = 0; i < officialRound; ++i) {
 $("#official-creator-score").html(officialCreatorScore);
 $("#official-invited-player-score").html(officialInvitedPlayerScore);
 
-{% if player.key == game.creator_player_key %}
+{% if player.key == game.creator_key %}
   var playerScores = creatorScores;
 {% else %}
   var playerScores = invitedPlayerScores;

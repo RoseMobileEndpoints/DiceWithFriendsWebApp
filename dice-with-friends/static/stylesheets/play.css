@@ -6,8 +6,13 @@ html, body {
   overflow: hidden;
 }
 
+.game-stats {
+	background: rgb(232, 243, 232);
+	margin-top: 20px;
+	text-align: center;
+}
 .jumbotron {
-	margin: 40px;
+	margin-top: 40px;
 }
 
 .jumbotron div {

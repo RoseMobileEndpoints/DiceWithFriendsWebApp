@@ -32,10 +32,10 @@ rh.dwf.DiceRoundController.prototype.enableButtons = function() {
 			// TODO: Animate losing all your points
 		}
 	});
-	$("#btn-stop").click(function() {
-		diceRoundController.diceRound = new rh.dwf.DiceRound();
-		diceRoundController.updateAll();
-	});
+//	$("#btn-stop").click(function() {
+//		diceRoundController.diceRound = new rh.dwf.DiceRound();
+//		diceRoundController.updateAll();
+//	});
 };
 
 
@@ -70,7 +70,12 @@ rh.dwf.DiceRoundController.prototype.updateButtonActionStates = function() {
 
 
 rh.dwf.DiceRoundController.prototype.updateScore = function() {
-	this.$score.html(this.diceRound.getRoundScore());
+	if (this.diceRound.isRoundOver()) {
+		this.$score.html("BUST!");
+	} else {
+		this.$score.html(this.diceRound.getRoundScore());
+	}
+	$("input[name='new_score']").val(this.diceRound.getRoundScore()); // TODO: Refactor
 };
 
 

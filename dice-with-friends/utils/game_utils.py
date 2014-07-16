@@ -10,17 +10,19 @@ def get_all_games_for_player(player):
   return Game.query(ndb.OR(Game.creator_player_key == player.key,
                            Game.invited_player_key == player.key)).fetch()
 
-def get_incomplete_games(games):
+
+def get_incomplete_games_for_player(games, player):
   incomplete_games = []
   for game in games:
-    if not is_game_finished(game):
+    if not is_game_finished_by_player(game, player):
       incomplete_games.append(game)
   return incomplete_games
 
-def is_game_finished(game):
-  creator_score = sum(game.creator_scores)
-  invited_player_score = sum(game.invited_player_scores)
-  return creator_score >= GAME_SCORE_TO_WIN or invited_player_score >= GAME_SCORE_TO_WIN
+def is_game_finished_by_player(game, player):
+  if player.key == game.creator_player_key:
+    return sum(game.creator_scores) >= GAME_SCORE_TO_WIN
+  return sum(game.invited_player_scores) >= GAME_SCORE_TO_WIN
+
 
 # Input is a Game model object.
 # Output needs addition fields:

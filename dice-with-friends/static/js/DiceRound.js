@@ -46,7 +46,7 @@ rh.dwf.DiceRound.prototype.pressedButtonAtLocation = function(location, onTable)
 
 rh.dwf.DiceRound.prototype.getRoundScore = function() {
 	if (this.isRoundOver()) {
-		return "BUST!";
+		return 0;
 	}
 	return this.totalPriorRollsScore + this.rollScore;
 };

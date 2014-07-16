@@ -14,13 +14,13 @@ class BasePage(webapp2.RequestHandler):
       self.response.out.write(template.render({'login_url': users.create_login_url(self.request.referer)}))
     else:
       player = player_utils.get_player_from_email(user.email())
-      if not player.display_name or not len(player.display_name) > 0:
-        self.redirect("/set_display_name")
-      else:
-        values = {'player': player, 'logout_url': users.create_logout_url("/")}
-        self.update_values(player, values)
-        template = main.jinja_env.get_template(self.get_template())
-        self.response.out.write(template.render(values))
+      show_set_name_modal = not player.display_name or not len(player.display_name) > 0
+      values = {'player': player,
+                'show_set_name_modal': show_set_name_modal,
+                'logout_url': users.create_logout_url("/")}
+      self.update_values(player, values)
+      template = main.jinja_env.get_template(self.get_template())
+      self.response.out.write(template.render(values))
 
   def update_values(self, player, base_values):
     return

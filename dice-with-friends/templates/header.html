@@ -29,10 +29,63 @@
         </ul>
         {% endif %}
         <ul class="nav navbar-nav navbar-right">
-          <li>
-            {% if player %}<a style="display: inline-block;" href="/set_display_name">{{ player.get_name() }}</a>{% endif %}
-            {% if logout_url %} | <a style="display: inline-block;" href="{{ logout_url }}">Sign out</a>{% endif %}</li>
+          {% if player %}
+            <li><a id="change-display-name-link">{{ player.get_name() }}</a></li>
+          {% endif %}
+          {% if logout_url %}
+            <li><a style="display: inline-block;" href="{{ logout_url }}">Sign out</a></li>
+          {% endif %}
         </ul>
       </nav>
     </div>
   </header>
+
+{% if player %}
+  <!-- Change display_name Modal -->
+  <div id='change-display-name-modal' class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+          {% if player.display_name %}
+            <h4 class="modal-title">Update your display name</h4>
+          {% else %}
+            <h4 class="modal-title">Set your display name</h4>
+          {% endif %}
+        </div>
+        <form action="/setdisplayname" method="POST">
+          <div class="modal-body">
+            <p>This will be the name displayed in the app and on game pages.</p>
+            <input type="text" name="display_name" class="form-control" placeholder="Usually just your first name" value="{% if player.display_name %}{{ player.display_name }}{% endif %}" autofocus>
+          </div>
+          <div class="modal-footer">
+	        {% if player.display_name %}
+	          <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+	        {% endif %}
+            <button type="submit" class="btn btn-primary">OK</button>
+          </div>
+        </form>
+      </div>
+      <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+  </div>
+  <!-- /.modal -->
+  <script>
+  	$("#change-display-name-link").click(function() {
+  	  {% if player.display_name %}
+  	    $("input[name=display_name]").val("{{ player.display_name }}");
+      {% else %}
+        $("input[name=display_name]").val("");
+      {% endif %}
+      $('#change-display-name-modal').modal('show');
+  	});
+  	{% if show_set_name_modal %}
+  	  $(document).ready(function() {
+  		setTimeout(function() {
+  		  $('#change-display-name-modal').modal('show');
+  		}, 2000);
+  	  });
+  	{% endif %}
+  </script>
+{% endif %}

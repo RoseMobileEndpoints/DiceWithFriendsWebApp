@@ -22,19 +22,41 @@ IOS_CLIENT_ID = ""
 class DiceWithFriendsApi(protorpc.remote.Service):
 
   """
-    Player insert, queryForPastOpponents
+    Player insert
     Game:
       insert
       delete
       queryWaitingForMe:         'my' score < 10K & rounds < rounds where opponent hit 10K  
       queryWaitingOnlyForOpponent  score >= 10K & opp score < 10 K & opponent round < round where I hit 10K
       queryCompletedGames      (use boolean)
-      querySoloIncomplete      (use boolean)
-      querySoloComplete        (use boolean)
     """
 
+  # Insert methods
+  @Player.method(user_required= True, name="player.insert", path="player/insert", http_method="POST")
+  def player_insert(self, player):
+    """ Add or update a player for the given user """
+    if player.from_datastore:
+      player_with_parent = player
+    else:
+      assignment_with_parent = Assignment(parent = main.get_parent_key(endpoints.get_current_user()),
+                                                name = assignment.name)
+        assignment_with_parent.put()
+        return assignment_with_parent
 
-
+    @GradeEntry.method(user_required= True, name="gradeentry.insert", path="gradeentry/insert", http_method="POST")
+    def gradeentry_insert(self, grade_entry):
+        """ Add or update a grade entry for an assignment """
+        if grade_entry.from_datastore:
+            grade_entry_with_parent = grade_entry
+        else:
+            student = grade_entry.student_key.get()
+            grade_entry_with_parent = GradeEntry(parent = grade_entry.assignment_key,
+                                                 id = student.rose_username,
+                                                 score = grade_entry.score,
+                                                 student_key = grade_entry.student_key,
+                                                 assignment_key = grade_entry.assignment_key)
+        grade_entry_with_parent.put()
+        return grade_entry_with_parent
 
     # List methods
     @Student.query_method(user_required=True, query_fields=("limit", "order", "pageToken"),
@@ -59,33 +81,6 @@ class DiceWithFriendsApi(protorpc.remote.Service):
         """ List all the grade entries for the given assignment key """
         return query
 
-
-    # Insert methods
-    @Assignment.method(user_required= True, name="assignment.insert", path="assignment/insert", http_method="POST")
-    def assignment_insert(self, assignment):
-        """ Add or update an assignment owned by the given user """
-        if assignment.from_datastore:
-            assignment_with_parent = assignment
-        else:
-            assignment_with_parent = Assignment(parent = main.get_parent_key(endpoints.get_current_user()),
-                                                name = assignment.name)
-        assignment_with_parent.put()
-        return assignment_with_parent
-
-    @GradeEntry.method(user_required= True, name="gradeentry.insert", path="gradeentry/insert", http_method="POST")
-    def gradeentry_insert(self, grade_entry):
-        """ Add or update a grade entry for an assignment """
-        if grade_entry.from_datastore:
-            grade_entry_with_parent = grade_entry
-        else:
-            student = grade_entry.student_key.get()
-            grade_entry_with_parent = GradeEntry(parent = grade_entry.assignment_key,
-                                                 id = student.rose_username,
-                                                 score = grade_entry.score,
-                                                 student_key = grade_entry.student_key,
-                                                 assignment_key = grade_entry.assignment_key)
-        grade_entry_with_parent.put()
-        return grade_entry_with_parent
 
     # Delete methods
     @Assignment.method(user_required= True, request_fields = ("entityKey",),

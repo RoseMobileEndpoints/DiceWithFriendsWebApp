@@ -1,5 +1,6 @@
 from models import Player
 import logging
+from google.appengine.ext import ndb
 
 def get_player_from_email(email):
   """Helper method to get the Player object corresponding to the given User.
@@ -11,3 +12,7 @@ def get_player_from_email(email):
     player = Player(id=email.lower())
     player.put()
   return player
+
+def get_parent_key(user):
+    return ndb.Key("Entity", user.email().lower())
+

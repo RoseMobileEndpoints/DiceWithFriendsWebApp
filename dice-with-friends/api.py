@@ -3,16 +3,12 @@ Created on Jul 16, 2014
 
 @author: Matt Boutell and Dave Fisher
 '''
-
-import logging
-
 import endpoints
 from google.appengine.ext import ndb
 import protorpc
 
-import main
 from models import Player, Game
-from utils import player_utils, game_utils
+from utils import player_utils
 
 
 # For authentication
@@ -32,16 +28,30 @@ class DiceWithFriendsApi(protorpc.remote.Service):
     Game:
       insert
       delete
-      queryWaitingForMe:         'my' score < 10K & rounds < rounds where opponent hit 10K  
+      queryWaitingForMe:         'my' score < 10K & rounds < rounds where opponent hit 10K
       queryWaitingOnlyForOpponent  score >= 10K & opp score < 10 K & opponent round < round where I hit 10K
       queryCompletedGames      (use boolean)
     """
+
+  @Player.method(user_required= True, name="player.get", path="player/get", http_method="GET")
+  def player_get(self, player):
+    """ Returns the Player for the given user """
+    return player_utils.get_player_from_email(endpoints.get_current_user().email())
+
+  @Player.method(user_required= True, request_fields=("entityKey",), name="player.getname",
+                 path="player/getname/{entityKey}", http_method="GET")
+  def player_get_name(self, player):
+    """ Returns the Player for the given entityKey with the best name available in the display name. """
+    if not player.from_datastore:
+      raise endpoints.NotFoundException('Player not found.')
+    player.display_name = player.get_name()
+    return player
 
   # Insert methods
   @Player.method(user_required= True, name="player.insert", path="player/insert", http_method="POST")
   def player_insert(self, player):
     """ Add or update a player for the given user """
-    
+
     # get_player_from_email will create a new player if none exists
     player_with_parent = player_utils.get_player_from_email(endpoints.get_current_user().email())
     player_with_parent.display_name = player.display_name
@@ -91,7 +101,7 @@ class DiceWithFriendsApi(protorpc.remote.Service):
 #             grade_entry.key.delete()
 #         assignment.key.delete()
 #         return Assignment(name="deleted")
-# 
+#
 #     @GradeEntry.method(user_required= True, request_fields = ("entityKey",),
 #                        name="gradeentry.delete", path="gradeentry/delete/{entityKey}", http_method="DELETE")
 #     def gradeentry_delete(self, grade_entry):

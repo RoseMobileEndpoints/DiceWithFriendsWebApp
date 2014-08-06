@@ -9,10 +9,11 @@ class Player(EndpointsModel):
   past_opponent_emails = ndb.StringProperty(repeated=True)
 
   def get_name(self):
-    """Returns a suitable display name for use on the leaderboards."""
+    """Returns the best name available for a Player."""
     if self.display_name:
       return self.display_name
     return self.key.string_id() # email address
+
 
 class Game(EndpointsModel):
   """ Dice with Friends game. """

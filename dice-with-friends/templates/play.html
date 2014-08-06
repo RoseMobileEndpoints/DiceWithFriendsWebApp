@@ -13,7 +13,11 @@
 			<h2>{{ game.creator_key.get().get_name() }}<br><span id="official-creator-score"></span></h2>
 		</div>
 		<div class="col-xs-6">
-			<h2>{{ game.invitee_key.get().get_name() }}<br><span id="official-invited-player-score"></span></h2>
+			<h2>{% if game.invitee_key %}
+			      {{ game.invitee_key.get().get_name() }}
+			    {% else %}
+			      Solo
+			    {% endif %}<br><span id="official-invited-player-score"></span></h2>
 		</div>
 	</div>
 	<h2 style="text-align: center">After <span id="player-actual-round"></span> rounds, my score = <span id="player-score"></span></h2>

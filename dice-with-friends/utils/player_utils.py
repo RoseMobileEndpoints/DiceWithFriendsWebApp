@@ -6,10 +6,11 @@ def get_player_from_email(email):
   """Helper method to get the Player object corresponding to the given User.
   Creates a new Player object if one didn't exist already.
   """
-  player = Player.get_by_id(email.lower(), parent=get_parent_key_from_email(email)) 
+  email = email.lower()
+  player = Player.get_by_id(email, parent=get_parent_key_from_email(email)) 
   if not player:
     logging.info("Failed to find player by id, creating new user")
-    player = Player(parent=get_parent_key_from_email(email), id=email.lower())
+    player = Player(parent=get_parent_key_from_email(email), id=email)
     player.put()
   return player
 

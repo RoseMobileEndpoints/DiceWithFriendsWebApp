@@ -53,9 +53,16 @@ class ScoresUpdateAction(base_handlers.BaseAction):
 
 class NewGameAction(base_handlers.BaseAction):
   def handle_post(self, player):
-    invited_player = player_utils.get_player_from_email(self.request.get('invited_player_email').lower())
+    invited_player_email = self.request.get('invited_player_email').lower()
+    if len(invited_player_email) > 0:
+      invited_player_key = player_utils.get_player_from_email(invited_player_email).key
+    else:
+      invited_player_key = None
+      
     new_game = models.Game(parent=player.key,
                            creator_key=player.key,
-                           invitee_key=invited_player.key)
+                           invitee_key=invited_player_key,
+                           is_solo=not invited_player_key 
+                           )
     new_game.put();
     self.redirect("/play?game_key=" + new_game.key.urlsafe())

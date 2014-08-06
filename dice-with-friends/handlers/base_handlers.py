@@ -5,6 +5,8 @@ import webapp2
 import main
 from utils import player_utils
 
+### Pages ###
+
 class BasePage(webapp2.RequestHandler):
   """Page handlers should inherit from this one."""
   def get(self):
@@ -22,9 +24,11 @@ class BasePage(webapp2.RequestHandler):
       template = main.jinja_env.get_template(self.get_template())
       self.response.out.write(template.render(values))
 
-  def update_values(self, player, base_values):
-    return
+  def update_values(self, player, values):
+    raise Exception("Subclasses must override this method")
 
+
+### Actions ###
 
 class BaseAction(webapp2.RequestHandler):
   """ALL action handlers should inherit from this one."""

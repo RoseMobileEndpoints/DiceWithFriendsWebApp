@@ -16,7 +16,6 @@ class PlayPage(base_handlers.BasePage):
   def update_values(self, player, values):
     game_key = ndb.Key(urlsafe=self.request.get('game_key'))
     values["game"] = game_key.get()
-    return
 
 
 class GamesInProgressPage(base_handlers.BasePage):
@@ -24,11 +23,6 @@ class GamesInProgressPage(base_handlers.BasePage):
     return "templates/games_in_progress.html"
 
   def update_values(self, player, values):
-#     all_my_games = game_utils.get_all_games_for_player(player)
-#     incomplete_games = game_utils.get_incomplete_games_for_player(all_my_games, player)
-#     game_utils.add_incomplete_game_table_data(incomplete_games, player)
-#     values["incomplete_games"] = incomplete_games
-
     games_less_than_10k, games_10k_or_more = game_utils.get_games_in_progress(player)
     game_utils.add_incomplete_game_table_data(games_less_than_10k, player)
     game_utils.add_incomplete_game_table_data(games_10k_or_more, player)

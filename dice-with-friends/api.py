@@ -8,6 +8,7 @@ import endpoints
 import main
 from models import Player, Game
 import protorpc
+from utils import player_utils
 
 # For authentication
 WEB_CLIENT_ID = ""
@@ -38,10 +39,12 @@ class DiceWithFriendsApi(protorpc.remote.Service):
     if player.from_datastore:
       player_with_parent = player
     else:
-      assignment_with_parent = Assignment(parent = main.get_parent_key(endpoints.get_current_user()),
-                                                name = assignment.name)
-        assignment_with_parent.put()
-        return assignment_with_parent
+      user = endpoints.get_current_user()
+      player_with_parent = Player(parent = player_utils.get_parent_key(user),
+                                                id = user.email().lower(),
+                                                display_name = player.display_name)
+    player_with_parent.put()
+    return player_with_parent
 
     @GradeEntry.method(user_required= True, name="gradeentry.insert", path="gradeentry/insert", http_method="POST")
     def gradeentry_insert(self, grade_entry):

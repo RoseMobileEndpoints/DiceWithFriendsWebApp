@@ -33,7 +33,7 @@ app = webapp2.WSGIApplication([
     ('/', main_handlers.HomePage),
     ('/play', game_handlers.PlayPage),
     ('/gamesinprogress', game_handlers.GamesInProgressPage),
-    ('/allgameswithfriends', game_handlers.AllGamesWithFriendsPage),
+    ('/completedgames', game_handlers.CompletedGamesWithFriendsPage),
 
     ('/setdisplayname', main_handlers.SetDisplayNameAction),
     ('/newgame', game_handlers.NewGameAction),

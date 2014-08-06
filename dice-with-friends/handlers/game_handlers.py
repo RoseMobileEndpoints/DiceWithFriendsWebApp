@@ -21,16 +21,23 @@ class PlayPage(base_handlers.BasePage):
 
 class GamesInProgressPage(base_handlers.BasePage):
   def get_template(self):
-    return "templates/gamesinprogress.html"
+    return "templates/games_in_progress.html"
 
   def update_values(self, player, values):
-    all_my_games = game_utils.get_all_games_for_player(player)
-    incomplete_games = game_utils.get_incomplete_games_for_player(all_my_games, player)
-    game_utils.add_incomplete_game_table_data(incomplete_games, player)
-    values["incomplete_games"] = incomplete_games
+#     all_my_games = game_utils.get_all_games_for_player(player)
+#     incomplete_games = game_utils.get_incomplete_games_for_player(all_my_games, player)
+#     game_utils.add_incomplete_game_table_data(incomplete_games, player)
+#     values["incomplete_games"] = incomplete_games
+
+    games_less_than_10k, games_10k_or_more = game_utils.get_games_in_progress(player)
+    game_utils.add_incomplete_game_table_data(games_less_than_10k, player)
+    game_utils.add_incomplete_game_table_data(games_10k_or_more, player)
+    logging.info("games_less_than_10k = " + str(games_less_than_10k))
+    logging.info("games_10k_or_more = " + str(games_10k_or_more))
+    values.update({"games_less_than_10k": games_less_than_10k, "games_10k_or_more": games_10k_or_more})
 
 
-class AllGamesWithFriendsPage(base_handlers.BasePage):
+class CompletedGamesWithFriendsPage(base_handlers.BasePage):
   def get_template(self):
     return "templates/all_games_with_friends.html"
 
@@ -43,10 +50,9 @@ class ScoresUpdateAction(base_handlers.BaseAction):
     new_score = int(self.request.get("new_score"))
     if player.key == game.creator_key:
       game.creator_scores.append(new_score)
-      game.last_update_by_creator = datetime.now()
     else:
       game.invitee_scores.append(new_score)
-      game.last_update_by_invitee = datetime.now()
+    game.is_complete = game_utils.is_game_complete(game)
     game.put()
     self.redirect(self.request.referer)
 

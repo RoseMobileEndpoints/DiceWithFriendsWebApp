@@ -79,22 +79,6 @@ class DiceWithFriendsApi(protorpc.remote.Service):
     query = query.order(Game._key).filter(ndb.OR(Game.creator_key == player.key, Game.invitee_key == player.key))
     return query
 
- 
-#     @Assignment.query_method(user_required=True, query_fields=("limit", "pageToken"),
-#                              name="assignment.list", path="assignment/list", http_method="GET")
-#     def assignment_list(self, query):
-#         """ List all the assignments owned by the user """
-#         user = endpoints.get_current_user()
-#         assignments = Assignment.query(ancestor=main.get_parent_key(user)).order(Assignment.name)
-#         return assignments
-# 
-#     @GradeEntry.query_method(user_required=True, query_fields=("limit", "order", "pageToken", "assignment_key"),
-#                              name="gradeentry.list", path="gradeentry/list/{assignment_key}", http_method="GET")
-#     def gradeentry_list(self, query):
-#         """ List all the grade entries for the given assignment key """
-#         return query
-# 
-# 
 #     # Delete methods
 #     @Assignment.method(user_required= True, request_fields = ("entityKey",),
 #                        name="assignment.delete", path="assignment/delete/{entityKey}", http_method="DELETE")

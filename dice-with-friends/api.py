@@ -7,6 +7,7 @@ Created on Jul 16, 2014
 import logging
 
 import endpoints
+from google.appengine.ext import ndb
 import protorpc
 
 import main
@@ -68,15 +69,17 @@ class DiceWithFriendsApi(protorpc.remote.Service):
       game_with_parent.put()
       return game_with_parent
 
-#     # List methods
-#     @Student.query_method(user_required=True, query_fields=("limit", "order", "pageToken"),
-#                           name="student.list", path="student/list", http_method="GET")
-#     def student_list(self, query):
-#         """ List all the students for this user """
-#         user = endpoints.get_current_user()
-#         students = Student.query(ancestor=main.get_parent_key(user)).order(Student.rose_username)
-#         return students
-# 
+  # List methods
+  @Game.query_method(user_required=True, query_fields=("is_solo", "is_complete", "limit", "order", "pageToken"),
+                          name="game.list", path="game/list", http_method="GET")
+  def game_list(self, query):
+    """ List all the games for this user """
+    player = player_utils.get_player_from_email(endpoints.get_current_user().email())
+    # Required to order by key first to do a multi (OR) filter.
+    query = query.order(Game._key).filter(ndb.OR(Game.creator_key == player.key, Game.invitee_key == player.key))
+    return query
+
+ 
 #     @Assignment.query_method(user_required=True, query_fields=("limit", "pageToken"),
 #                              name="assignment.list", path="assignment/list", http_method="GET")
 #     def assignment_list(self, query):

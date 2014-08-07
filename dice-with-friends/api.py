@@ -77,7 +77,8 @@ class DiceWithFriendsApi(protorpc.remote.Service):
   def game_list(self, query):
     """ List all the games for this user """
     player = player_utils.get_player_from_email(endpoints.get_current_user().email())
-    # Required to order by key first to do a multi (OR) filter.
+    # Required to order by key first when filter uses IN, OR, or !=, due to query cursor created for 
+    # page tokens that endpoints proto datastore implements after this method completes.
     query = query.order(Game.key).filter(ndb.OR(Game.creator_key == player.key, Game.invitee_key == player.key))
     return query
 

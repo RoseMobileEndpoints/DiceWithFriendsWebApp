@@ -13,9 +13,9 @@ from utils import player_utils
 
 
 # For authentication
-WEB_CLIENT_ID = ""
+WEB_CLIENT_ID = "1034873038322-8s341nnf24dhd1i0es7k9drldjm7o59g.apps.googleusercontent.com"
 ANDROID_CLIENT_ID_DAVE = ""
-ANDROID_CLIENT_ID_MATT = ""
+ANDROID_CLIENT_ID_MATT = "1034873038322-u1luv7nhbmrml30ltq349dm4k1lfrd4p.apps.googleusercontent.com"
 
 IOS_CLIENT_ID = ""
 

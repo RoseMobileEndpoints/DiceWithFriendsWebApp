@@ -3,6 +3,7 @@ Created on Jul 16, 2014
 
 @author: Matt Boutell and Dave Fisher
 '''
+
 import endpoints
 from google.appengine.ext import ndb
 import protorpc
@@ -23,22 +24,13 @@ IOS_CLIENT_ID = ""
                allowed_client_ids=[endpoints.API_EXPLORER_CLIENT_ID, WEB_CLIENT_ID, ANDROID_CLIENT_ID_DAVE, ANDROID_CLIENT_ID_MATT, IOS_CLIENT_ID])
 class DiceWithFriendsApi(protorpc.remote.Service):
 
-  """
-    Player insert
-    Game:
-      insert
-      delete
-      queryWaitingForMe:         'my' score < 10K & rounds < rounds where opponent hit 10K
-      queryWaitingOnlyForOpponent  score >= 10K & opp score < 10 K & opponent round < round where I hit 10K
-      queryCompletedGames      (use boolean)
-    """
-
-  @Player.method(user_required= True, name="player.get", path="player/get", http_method="GET")
+  # Single getters 
+  @Player.method(user_required=True, request_fields=(), name="player.get", path="player/get", http_method="GET")
   def player_get(self, player):
     """ Returns the Player for the given user """
     return player_utils.get_player_from_email(endpoints.get_current_user().email())
 
-  @Player.method(user_required= True, request_fields=("entityKey",), name="player.getname",
+  @Player.method(user_required=True, request_fields=("entityKey",), response_fields=("display_name",), name="player.getname",
                  path="player/getname/{entityKey}", http_method="GET")
   def player_get_name(self, player):
     """ Returns the Player for the given entityKey with the best name available in the display name. """
@@ -48,7 +40,7 @@ class DiceWithFriendsApi(protorpc.remote.Service):
     return player
 
   # Insert methods
-  @Player.method(user_required= True, name="player.insert", path="player/insert", http_method="POST")
+  @Player.method(user_required=True, name="player.insert", path="player/insert", http_method="POST")
   def player_insert(self, player):
     """ Add or update a player for the given user """
 
@@ -58,7 +50,7 @@ class DiceWithFriendsApi(protorpc.remote.Service):
     player_with_parent.put()
     return player_with_parent
 
-  @Game.method(user_required= True, name="game.insert", path="game/insert", http_method="POST")
+  @Game.method(user_required=True, name="game.insert", path="game/insert", http_method="POST")
   def game_insert(self, game):
     """ Add or update a game """
     if game.from_datastore:
@@ -89,29 +81,14 @@ class DiceWithFriendsApi(protorpc.remote.Service):
     query = query.order(Game._key).filter(ndb.OR(Game.creator_key == player.key, Game.invitee_key == player.key))
     return query
 
-#     # Delete methods
-#     @Assignment.method(user_required= True, request_fields = ("entityKey",),
-#                        name="assignment.delete", path="assignment/delete/{entityKey}", http_method="DELETE")
-#     def assignment_delete(self, assignment):
-#         """ Delete the assignment with the given key, plus all the associated grade entries """
-#         if not assignment.from_datastore:
-#             raise endpoints.NotFoundException("No assignment found for the given key")
-#         children = GradeEntry.query(ancestor=assignment.key)
-#         for grade_entry in children:
-#             grade_entry.key.delete()
-#         assignment.key.delete()
-#         return Assignment(name="deleted")
-#
-#     @GradeEntry.method(user_required= True, request_fields = ("entityKey",),
-#                        name="gradeentry.delete", path="gradeentry/delete/{entityKey}", http_method="DELETE")
-#     def gradeentry_delete(self, grade_entry):
-#         """ Delete the grade entry with the given key """
-#         if not grade_entry.from_datastore:
-#             raise endpoints.NotFoundException("No grade entry found for the given key")
-#         grade_entry.key.delete()
-#         return GradeEntry()
-
+  # Delete methods
+  @Game.method(user_required=True, request_fields = ("entityKey",), response_fields = (),
+               name="game.delete", path="game/delete/{entityKey}", http_method="DELETE")
+  def game_delete(self, game):
+        """ Delete the game with the given key """
+        if not game.from_datastore:
+            raise endpoints.NotFoundException("No game found for the given key")
+        game.key.delete()
+        return Game()
 
 app = endpoints.api_server([DiceWithFriendsApi], restricted=False)
-
-

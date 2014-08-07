@@ -12,12 +12,15 @@ from models import Player, Game
 from utils import player_utils
 
 
-# For authentication
+# For authentication, for dice-with-friends.appspot.com, dicewithfriends.com, and localhost:8080  
 WEB_CLIENT_ID = "1034873038322-8s341nnf24dhd1i0es7k9drldjm7o59g.apps.googleusercontent.com"
-ANDROID_CLIENT_ID_DAVE = ""
+
+# package names both = edu.rosehulman.dicewithfriends
+ANDROID_CLIENT_ID_DAVE = "1034873038322-utkpjhpqk95gs8f4t330uebpsj6hdfvp.apps.googleusercontent.com"
 ANDROID_CLIENT_ID_MATT = "1034873038322-u1luv7nhbmrml30ltq349dm4k1lfrd4p.apps.googleusercontent.com"
 
-IOS_CLIENT_ID = ""
+# Bundle ID = edu.rosehulman.DiceWithFriends
+IOS_CLIENT_ID = "1034873038322-ehsntcbimi2v3aalpl2ifphnh1nrkg0n.apps.googleusercontent.com"
 
 @endpoints.api(name="dicewithfriends", version="v1", description="Dice with Friends API",
                hostname="dice-with-friends.appspot.com", audiences=[WEB_CLIENT_ID],

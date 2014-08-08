@@ -4,6 +4,8 @@ Created on Jul 16, 2014
 @author: Matt Boutell and Dave Fisher
 '''
 
+import logging
+
 import endpoints
 from google.appengine.ext import ndb
 import protorpc
@@ -53,6 +55,24 @@ class DiceWithFriendsApi(protorpc.remote.Service):
     player_with_parent.put()
     return player_with_parent
 
+  # Edit a game by ONLY adding a new score 
+  @Game.method(user_required=True, request_fields=("entityKey","new_score"), name="game.addscore", path="game/addscore", http_method="POST")
+  def game_addscore(self, game):
+    """ Add a score to a game """
+    logging.info("game=" + str(game.entityKey) + " " + str(game.new_score))
+    if game.entityKey is None or game.new_score is None:
+      raise endpoints.BadRequestException("Missing required properties")
+    # TODO: figure out whose score the new one is.
+    game.creator_scores.append(game.new_score)
+    game.new_score = None
+    
+    
+    # TODO: check for game complete
+    game.put()
+    # TODO: if this is the first invitee round, update past_opponent on each player.
+    return game
+
+  # TODO: change insert to new_game.
   @Game.method(user_required=True, name="game.insert", path="game/insert", http_method="POST")
   def game_insert(self, game):
     """ Add or update a game """

@@ -18,7 +18,7 @@ class Player(EndpointsModel):
 class Game(EndpointsModel):
   """ Dice with Friends game. """
   _message_fields_schema = ("entityKey", "creator_key", "invitee_key", "creator_scores", "invitee_scores",
-                            "last_touch_date_time", "is_complete", "is_solo", "invitee_email")
+                            "last_touch_date_time", "is_complete", "is_solo")
   creator_key = ndb.KeyProperty(kind=Player)
   invitee_key = ndb.KeyProperty(kind=Player)
   creator_scores = ndb.IntegerProperty(repeated=True)
@@ -28,3 +28,6 @@ class Game(EndpointsModel):
   is_solo = ndb.BooleanProperty()
   # Not in datastore, for message passing only.
   invitee_email = ndb.StringProperty()
+  new_score = ndb.IntegerProperty()
+  
+  

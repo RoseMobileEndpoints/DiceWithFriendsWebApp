@@ -72,7 +72,7 @@ class DiceWithFriendsApi(protorpc.remote.Service):
     # TODO: if this is the first invitee round, update past_opponent on each player.
     return game
 
-  # TODO: change insert to new_game.
+  # TODO: change insert to new_game. And make request fields to be invitee_email only.
   @Game.method(user_required=True, name="game.insert", path="game/insert", http_method="POST")
   def game_insert(self, game):
     """ Add or update a game """

@@ -45,6 +45,8 @@ class ScoresUpdateAction(base_handlers.BaseAction):
     if player.key == game.creator_key:
       game.creator_scores.append(new_score)
     else:
+      if len(game.invitee_scores) == 0:
+        player_utils.update_past_opponents(game) 
       game.invitee_scores.append(new_score)
     game.is_complete = game_utils.is_game_complete(game)
     game.put()

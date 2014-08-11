@@ -11,7 +11,7 @@ from google.appengine.ext import ndb
 import protorpc
 
 from models import Player, Game
-from utils import player_utils
+from utils import player_utils, game_utils
 
 
 # For authentication, for dice-with-friends.appspot.com, dicewithfriends.com, and localhost:8080  
@@ -59,40 +59,39 @@ class DiceWithFriendsApi(protorpc.remote.Service):
   @Game.method(user_required=True, request_fields=("entityKey","new_score"), name="game.addscore", path="game/addscore", http_method="POST")
   def game_addscore(self, game):
     """ Add a score to a game """
-    logging.info("game=" + str(game.entityKey) + " " + str(game.new_score))
     if game.entityKey is None or game.new_score is None:
       raise endpoints.BadRequestException("Missing required properties")
-    # TODO: figure out whose score the new one is.
-    game.creator_scores.append(game.new_score)
+    # Figure out whose score the new one is.
+    player = player_utils.get_player_from_email(endpoints.get_current_user().email())
+    if player.key == game.creator_key:
+      game.creator_scores.append(game.new_score)
+    else:
+      # If this is the first invitee round, update past_opponent on each player.
+      if len(game.invitee_scores) == 0:
+        player_utils.update_past_opponents(game) 
+      game.invitee_scores.append(game.new_score)
     game.new_score = None
-    
-    
-    # TODO: check for game complete
+    game.is_complete = game_utils.is_game_complete(game)
     game.put()
-    # TODO: if this is the first invitee round, update past_opponent on each player.
     return game
 
-  # TODO: change insert to new_game. And make request fields to be invitee_email only.
-  @Game.method(user_required=True, name="game.insert", path="game/insert", http_method="POST")
-  def game_insert(self, game):
+  @Game.method(user_required=True, request_fields=("invitee_email",), 
+               name="game.newgame", path="game/newgame", http_method="POST")
+  def game_new_game(self, game):
     """ Add or update a game """
-    if game.from_datastore:
-      game_with_parent = game
+    creator_key = player_utils.get_player_from_email(endpoints.get_current_user().email()).key
+    if game.invitee_email:
+      invitee_key = player_utils.get_player_from_email(game.invitee_email).key
     else:
-      creator = endpoints.get_current_user()
-      player_for_creator = player_utils.get_player_from_email(creator.email())
-      if game.invitee_email:
-        invited_player_key = player_utils.get_player_from_email(game.invitee_email).key
-      else:
-        invited_player_key = None
+      invitee_key = None
 
-      game_with_parent = Game(parent = player_for_creator.key,
-                              creator_key = player_for_creator.key,
-                              invitee_key = invited_player_key,
-                              is_solo = not invited_player_key
-                              )
-      game_with_parent.put()
-      return game_with_parent
+    game_with_parent = Game(parent = creator_key,
+                            creator_key = creator_key,
+                            invitee_key = invitee_key,
+                            is_solo = not invitee_key
+                            )
+    game_with_parent.put()
+    return game_with_parent
 
   # List methods
   @Game.query_method(user_required=True, query_fields=("is_solo", "is_complete", "limit", "order", "pageToken"),

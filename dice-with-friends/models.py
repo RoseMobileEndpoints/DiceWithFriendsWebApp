@@ -5,6 +5,7 @@ from endpoints_proto_datastore.ndb.model import EndpointsModel
 
 class Player(EndpointsModel):
   """ Holder information for a player. """
+  _message_fields_schema = ("entityKey", "display_name", "past_opponent_emails")
   display_name = ndb.StringProperty()
   past_opponent_emails = ndb.StringProperty(repeated=True)
 

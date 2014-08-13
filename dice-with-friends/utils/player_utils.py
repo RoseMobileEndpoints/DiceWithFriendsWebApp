@@ -8,7 +8,8 @@ def get_player_from_email(email):
   Creates a new Player object if one didn't exist already.
   """
   email = email.lower()
-  player = Player.get_by_id(email, parent=get_parent_key_from_email(email)) 
+  player = Player.get_by_id(email, parent=get_parent_key_from_email(email))
+  logging.info("player = " + str(player)) 
   if not player:
     logging.info("Failed to find player by id, creating new user")
     player = Player(parent=get_parent_key_from_email(email), id=email)

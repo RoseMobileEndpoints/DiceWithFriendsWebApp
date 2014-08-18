@@ -60,11 +60,11 @@ class NewGameAction(base_handlers.BaseAction):
       invited_player_key = player_utils.get_player_from_email(invited_player_email).key
     else:
       invited_player_key = None
-      
+
     new_game = models.Game(parent=player.key,
                            creator_key=player.key,
                            invitee_key=invited_player_key,
-                           is_solo=not invited_player_key 
+                           is_solo=not invited_player_key
                            )
     new_game.put();
     self.redirect("/play?game_key=" + new_game.key.urlsafe())

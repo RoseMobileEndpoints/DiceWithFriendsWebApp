@@ -35,6 +35,9 @@ class CompletedGamesWithFriendsPage(base_handlers.BasePage):
   def get_template(self):
     return "templates/all_games_with_friends.html"
 
+  def update_values(self, player, values):
+    pass
+
 ### Actions ###
 
 class ScoresUpdateAction(base_handlers.BaseAction):
@@ -46,7 +49,7 @@ class ScoresUpdateAction(base_handlers.BaseAction):
       game.creator_scores.append(new_score)
     else:
       if len(game.invitee_scores) == 0:
-        player_utils.update_past_opponents(game) 
+        player_utils.update_past_opponents(game)
       game.invitee_scores.append(new_score)
     game.is_complete = game_utils.is_game_complete(game)
     game.put()

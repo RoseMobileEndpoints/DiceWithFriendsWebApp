@@ -82,20 +82,20 @@ rh.dwf.DiceRoundController.prototype.updateScore = function() {
 rh.dwf.DiceRoundController.prototype.updateDie = function (die) {
 	switch (die.state) {
 	case rh.dwf.Die.ACTIVE_ON_TABLE:
-		$(this.$offTableButtons[die.location]).html("");
-		$(this.$onTableButtons[die.location]).html(die.value);
+		$(this.$offTableButtons[die.location]).html("").addClass("invisible");
+		$(this.$onTableButtons[die.location]).html(die.value).removeClass("invisible");
 		break;
 	case rh.dwf.Die.ACTIVE_OFF_TABLE:
-		$(this.$offTableButtons[die.location]).html(die.value);
-		$(this.$onTableButtons[die.location]).html("");
+		$(this.$offTableButtons[die.location]).html(die.value).removeClass("invisible");
+		$(this.$onTableButtons[die.location]).html("").addClass("invisible");
 		break;
 	case rh.dwf.Die.INACTIVE_ON_TABLE:
-		$(this.$offTableButtons[die.location]).html("");
-		$(this.$onTableButtons[die.location]).html(die.value + ".");
+		$(this.$offTableButtons[die.location]).html("").addClass("invisible");
+		$(this.$onTableButtons[die.location]).html(die.value + ".").removeClass("invisible");
 		break;
 	case rh.dwf.Die.INACTIVE_OFF_TABLE:
-		$(this.$offTableButtons[die.location]).html("x");
-		$(this.$onTableButtons[die.location]).html("");
+		$(this.$offTableButtons[die.location]).html("x").removeClass("invisible");
+		$(this.$onTableButtons[die.location]).html("").addClass("invisible");
 		break;
 	}
 };

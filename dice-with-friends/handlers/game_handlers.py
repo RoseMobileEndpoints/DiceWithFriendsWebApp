@@ -14,8 +14,17 @@ class PlayPage(base_handlers.BasePage):
     return "templates/play.html"
 
   def update_values(self, player, values):
-    game_key = ndb.Key(urlsafe=self.request.get('game_key'))
-    values["game"] = game_key.get()
+    game = ndb.Key(urlsafe=self.request.get('game_key')).get()
+    values["player_display_name"] = player.get_name()
+    if game.creator_key == player.key:
+      values["opponent_display_name"] = game.invitee_key.get().get_name()
+      values["player_scores"] = game.creator_scores
+      values["opponent_scores"] = game.invitee_scores
+    else:
+      values["opponent_display_name"] = game.creator_key.get().get_name()
+      values["player_scores"] = game.invitee_scores
+      values["opponent_scores"] = game.creator_scores
+    values["game"] = game
 
 
 class GamesInProgressPage(base_handlers.BasePage):

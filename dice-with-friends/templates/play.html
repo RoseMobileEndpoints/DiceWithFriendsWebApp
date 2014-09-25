@@ -9,13 +9,12 @@
     <div class="row">
       <div class="col-xs-6">
         <h2>
-          {{ game.creator_key.get().get_name() }}<br> <span id="creator-score"></span>
+          {{ player_display_name }}<br><span id="player-score"></span>
         </h2>
       </div>
       <div class="col-xs-6">
         <h2>
-          {% if game.invitee_key %} {{ game.invitee_key.get().get_name() }} {% else %} Solo {% endif
-          %}<br> <span id="invitee-score"></span>
+          {{ opponent_display_name }}<br><span id="opponent-score"></span>
         </h2>
       </div>
       <div class="col-xs-8 col-xs-offset-2">
@@ -61,18 +60,26 @@
 <h1>This game is OVER!</h1>
 {% endif %}
 <script>
-var creatorScores = {{ game.creator_scores }};
-var creatorScore = creatorScores.reduce(function(a, b) { return a + b; }, 0);
-$("#creator-score").html(creatorScore);
-var inviteeScores = {{ game.invitee_scores }};
-var inviteeScore = inviteeScores.reduce(function(a, b) { return a + b; }, 0);
-$("#invitee-score").html(inviteeScore);
-var roundDeltaCreatorMinusInvitee = creatorScores.length - inviteeScores.length;
+var playerScores = {{ player_scores }};
+var playerScore = playerScores.reduce(function(a, b) { return a + b; }, 0);
+$("#player-score").html(playerScore);
+var opponentScores = {{ opponent_scores }};
+var opponentScore = opponentScores.reduce(function(a, b) { return a + b; }, 0);
+$("#opponent-score").html(opponentScore);
+var roundsAhead = playerScores.length - opponentScores.length;
 
 // TODO: Don't use 0 or negative numbers.
-$("#round-delta-status").html(
-    "{{ game.creator_key.get().get_name() }} is " +  roundDeltaCreatorMinusInvitee +" rounds ahead of {{ game.invitee_key.get().get_name() }}"
-    );
+var roundDeltaStatus;
+if (roundsAhead > 1) {
+  roundDeltaStatus = "You have played " +  roundsAhead +" more rounds than {{opponent_display_name}}"
+} else if (roundsAhead == 1) {
+  roundDeltaStatus = "You have played one more round than {{opponent_display_name}}"
+} else if (roundsAhead == 0) {
+  roundDeltaStatus = "You have both played the same number of rounds";
+} else {
+  roundDeltaStatus = "{{opponent_display_name}} has played more rounds than you."
+}
+$("#round-delta-status").html(roundDeltaStatus);
 
 </script>
 {% include "templates/footer.html" %}

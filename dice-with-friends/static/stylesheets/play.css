@@ -40,14 +40,16 @@ body {
 	margin: 5px;
 }
 
-.dice-container {
-	position: relative;
-	display: inline-block;
-	background-color: #68DD6C;
-	padding: 20px;
-	border: 2px solid rgba(170, 81, 46, 0.42);
-	border-radius: 10px;
-	box-shadow: 5px 5px 2px #888888;
+@media (min-width: 400px) {
+	.dice-container {
+		position: relative;
+		display: inline-block;
+		background-color: #68DD6C;
+		padding: 20px;
+		border: 2px solid rgba(170, 81, 46, 0.42);
+		border-radius: 10px;
+		box-shadow: 5px 5px 2px #888888;
+	}
 }
 
 .dice-row button {

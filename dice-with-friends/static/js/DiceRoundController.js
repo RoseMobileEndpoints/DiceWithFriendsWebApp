@@ -78,24 +78,37 @@ rh.dwf.DiceRoundController.prototype.updateScore = function() {
 	$("input[name='new_score']").val(this.diceRound.getRoundScore()); // TODO: Refactor
 };
 
+rh.dwf.DiceRoundController.prototype.updateDieButtonClass = function(dieButton, value, disabled) {
+  dieButton.className = "btn btn-lg";
+  $dieButton = $(dieButton)
+  if (value == 0) {
+    $dieButton.addClass("invisible")
+    return;
+  }
+  if (disabled) {
+    $dieButton.addClass("die-" + value + "-disabled");
+  } else {
+    $dieButton.addClass("die-" + value);
+  }
+};
 
 rh.dwf.DiceRoundController.prototype.updateDie = function (die) {
 	switch (die.state) {
 	case rh.dwf.Die.ACTIVE_ON_TABLE:
-		$(this.$offTableButtons[die.location]).html("").addClass("invisible");
-		$(this.$onTableButtons[die.location]).html(die.value).removeClass("invisible");
+    this.updateDieButtonClass(this.$offTableButtons[die.location], 0);
+    this.updateDieButtonClass(this.$onTableButtons[die.location], die.value, false);
 		break;
 	case rh.dwf.Die.ACTIVE_OFF_TABLE:
-		$(this.$offTableButtons[die.location]).html(die.value).removeClass("invisible");
-		$(this.$onTableButtons[die.location]).html("").addClass("invisible");
+    this.updateDieButtonClass(this.$offTableButtons[die.location], die.value, false);
+    this.updateDieButtonClass(this.$onTableButtons[die.location], 0);
 		break;
 	case rh.dwf.Die.INACTIVE_ON_TABLE:
-		$(this.$offTableButtons[die.location]).html("").addClass("invisible");
-		$(this.$onTableButtons[die.location]).html(die.value + ".").removeClass("invisible");
+    this.updateDieButtonClass(this.$offTableButtons[die.location], 0);
+    this.updateDieButtonClass(this.$onTableButtons[die.location], die.value, false);
 		break;
 	case rh.dwf.Die.INACTIVE_OFF_TABLE:
-		$(this.$offTableButtons[die.location]).html("x").removeClass("invisible");
-		$(this.$onTableButtons[die.location]).html("").addClass("invisible");
+    this.updateDieButtonClass(this.$offTableButtons[die.location], die.value, true);
+    this.updateDieButtonClass(this.$onTableButtons[die.location], 0);
 		break;
 	}
 };

@@ -9,12 +9,12 @@
     <div class="row">
       <div class="col-xs-6">
         <h2>
-          {{ player_display_name }}<br><span id="player-score"></span>
+          <span class="player-name">{{ player_display_name }}</span><br><span id="player-score"></span>
         </h2>
       </div>
       <div class="col-xs-6">
         <h2>
-          {{ opponent_display_name }}<br><span id="opponent-score"></span>
+          <span class="player-name">{{ opponent_display_name }}</span><br><span id="opponent-score"></span>
         </h2>
       </div>
       <div class="col-xs-8 col-xs-offset-2">
@@ -38,12 +38,14 @@
       <button id="btn-off-table-5" type="button" class="btn btn-lg invisible"></button>
     </div>
     <div class="col-xs-12 on-table dice-row">
-      <button id="btn-on-table-0" type="button" class="btn btn-lg"></button>
-      <button id="btn-on-table-1" type="button" class="btn btn-lg"></button>
-      <button id="btn-on-table-2" type="button" class="btn btn-lg"></button>
-      <button id="btn-on-table-3" type="button" class="btn btn-lg"></button>
-      <button id="btn-on-table-4" type="button" class="btn btn-lg"></button>
-      <button id="btn-on-table-5" type="button" class="btn btn-lg"></button>
+      <div class="dice-container">
+        <button id="btn-on-table-0" type="button" class="btn btn-lg"></button>
+        <button id="btn-on-table-1" type="button" class="btn btn-lg"></button>
+        <button id="btn-on-table-2" type="button" class="btn btn-lg"></button>
+        <button id="btn-on-table-3" type="button" class="btn btn-lg"></button>
+        <button id="btn-on-table-4" type="button" class="btn btn-lg"></button>
+        <button id="btn-on-table-5" type="button" class="btn btn-lg"></button>
+      </div>
     </div>
     <div class="col-xs-12">
       <form action="/scoresupdate" method="POST">
@@ -61,14 +63,29 @@
 {% endif %}
 <script>
 var playerScores = {{ player_scores }};
-var playerScore = playerScores.reduce(function(a, b) { return a + b; }, 0);
-$("#player-score").html(playerScore);
 var opponentScores = {{ opponent_scores }};
-var opponentScore = opponentScores.reduce(function(a, b) { return a + b; }, 0);
-$("#opponent-score").html(opponentScore);
 var roundsAhead = playerScores.length - opponentScores.length;
 
-// TODO: Don't use 0 or negative numbers.
+// Scores
+var playerScore = playerScores.reduce(function(a, b) { return a + b; }, 0);
+$("#player-score").html(playerScore);
+var opponentScore = opponentScores.reduce(function(a, b) { return a + b; }, 0);
+if (roundsAhead < 0) {
+  opponentScore = 0;
+  for (var i = 0; i < playerScores.length; ++i) {
+    opponentScore += opponentScores[i];
+  }
+}
+$("#opponent-score").html(opponentScore);
+if (playerScore > opponentScore) {
+  $("#player-score").addClass("winning-score-color");
+  $("#opponent-score").addClass("losing-score-color");
+} else if (playerScore < opponentScore){
+  $("#player-score").addClass("losing-score-color");
+  $("#opponent-score").addClass("winning-score-color");
+}
+
+// Status text
 var roundDeltaStatus;
 if (roundsAhead > 1) {
   roundDeltaStatus = "You have played " +  roundsAhead +" more rounds than {{opponent_display_name}}"
@@ -77,9 +94,12 @@ if (roundsAhead > 1) {
 } else if (roundsAhead == 0) {
   roundDeltaStatus = "You have both played the same number of rounds";
 } else {
-  roundDeltaStatus = "{{opponent_display_name}} has played more rounds than you."
+  roundDeltaStatus = "{{opponent_display_name}} has played more rounds (future scores hidden)."
 }
 $("#round-delta-status").html(roundDeltaStatus);
+
+
+
 
 </script>
 {% include "templates/footer.html" %}

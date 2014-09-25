@@ -59,9 +59,10 @@
 </div>
 {% else %}
 <!-- TODO: Handle when over 10k, but game is not over. -->
-<h1>This game is OVER!</h1>
+<h1 class="game-over text-center">This game is OVER!</h1>
 {% endif %}
 <script>
+var scoreNeededToWin = 10000;
 var playerScores = {{ player_scores }};
 var opponentScores = {{ opponent_scores }};
 var roundsAhead = playerScores.length - opponentScores.length;
@@ -98,6 +99,38 @@ if (roundsAhead > 1) {
 }
 $("#round-delta-status").html(roundDeltaStatus);
 
+// Check for >=10k
+if (playerScore >= scoreNeededToWin) {
+  $(".game-table").html("<h1>You have finished this game.  You need to wait for your opponent to finish.</h1>");
+}
+
+// Set game over message or start the DiceRoundController.
+{% if game.is_complete %}
+  var officialPlayerScore = 0;
+  var officialOpponentScore = 0;
+  var i = 0;
+  while (officialPlayerScore < scoreNeededToWin && officialOpponentScore < scoreNeededToWin) {
+    officialPlayerScore += playerScores[i];
+    officialOpponentScore += opponentScores[i];
+    i++;
+  }
+  $("#player-score").html(officialPlayerScore);
+  $("#opponent-score").html(officialOpponentScore);
+  if (officialPlayerScore > officialOpponentScore) {
+    $("#player-score").addClass("winning-score-color");
+    $("#opponent-score").addClass("losing-score-color");
+    $(".game-over").html("This game is over!<br>The winner was... {{ player_display_name }}!");
+  } else if (officialPlayerScore < officialOpponentScore){
+    $("#player-score").addClass("losing-score-color");
+    $("#opponent-score").addClass("winning-score-color");
+    $(".game-over").html("This game is over!<br>The winner was... {{ opponent_display_name }}!");
+  } else {
+    $(".game-over").html("Tie game!");
+  }
+  $("#round-delta-status").html("");
+{% else %}
+	new rh.dwf.DiceRoundController();
+{% endif %}
 
 
 
